@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B2C View</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="/B2C/css/mobile.css">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.3/css/unicons.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> 
+    <script defer src="https://ajax.googleapis.com/ajax/libs/d3js/5.15.0/d3.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCaK8XfI5ZK3_Ylc5WmzhxxcthaHwIrGIA&libraries=visualization"
+     defer></script>
+     <script defer src="/B2C/js/index.js"></script>
+
+</head>
+<body>
+
+    <div class="container-fluid">
+
+            <div class="row" id="mapRow">
+                <div class="map" id="map"></div>
+                <div class="shadow row align-items-center" id="busDetails" style="visibility: hidden;">
+                    <div class="col-3">
+                        <img src="/B2C/img/bus.svg" alt="bus" id=busimg>
+                    </div>
+                    <div class="col-2">
+                        <b id="BusNumberDetails"></b>
+                    </div>
+                    <div class="col-3">
+                        <img src="/B2C/img/clock.svg" alt="" id="clockimg">
+                    </div>
+                    <div class="col-4">
+                        <b id="BusTimeDetails"></b>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" id="searchRow">
+                <div class="col" id="searchCol">
+                    <div class="row align-items-center" id="searchLine">
+
+                            <div class="col-3">
+                                <img src="/B2C/img/sort.svg" alt="sort" id="sort">
+                            </div>
+                    
+                            <div class="col-6">
+                                <input type="tel" class="shadow-sm form-control text-center" id="busSelected" placeholder="69">
+                            </div>
+
+                            <div class="col-3 text-right">
+                                <img src="/B2C/img/compress.svg" alt="sort" id="sort">
+                            </div>
+                        
+                    </div>
+
+                    <div class="row" id="listBus">
+                        <ul class="list-group" id="listGroup">
+                          </ul>
+                    </div>
+                </div>
+              
+            </div>
+
+    </div>
+</body>
+</html>

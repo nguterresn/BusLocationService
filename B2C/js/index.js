@@ -28,7 +28,8 @@ ClientObject = {},
  * 					directionsRenderer,
  * 					markerObject,
  * 					stopIndex,
- * 					overviewPath
+ * 					overviewPath,
+ * 					handleInterval
  * 				}
  */
 ViewObject = {},
@@ -41,7 +42,19 @@ ViewObject = {},
  * 					arrow
  * 				}
  */
-ListObject = {};
+ListObject = {},
+
+/**
+ * AnimationObject : {
+ * 						originLat,
+ * 						originLng,
+ * 						destLat,
+ * 						destLng,
+ * 						deltaLat,
+ * 						deltaLng
+ * 				}
+ */
+AnimationObject = {};
 
 var mapStyle = [
 	{
@@ -135,7 +148,6 @@ var mapStyle = [
 	}
   ];
 
-var handleInterval;
 var toggleTab = 0;
 
 /**
@@ -169,8 +181,8 @@ numberBus.addEventListener("input", function () {
 	 * But... If a interval is running it should be immediatly stopped.
 	 * */
 
-	if (!(handleInterval === undefined)) 
-			clearInterval(handleInterval);
+	//if (!(handleInterval === undefined)) 
+			//clearInterval(handleInterval);
 
 	if (isNaN(parseInt(numberBus.value))) {
 
@@ -294,21 +306,17 @@ function RequestSetupCoordinates() {
     oReq.send();
 }
 
+/*
 function StartRequestInterval() {
 	var oReq = new XMLHttpRequest();
     oReq.onload = function() {
 
-		/**
-		* Received lat & lng stop coordinates as a string JSON
-		*/
+		
 		var TempObject = JSON.parse(this.responseText);
 
 		UpdateBusObjectPosition(TempObject);
 		
-		/**
-		 * Update Path between stop and the Bus
-		 * Future update: path within the road
-		 */
+		
 		//UpdatePath();
 		
 		
@@ -319,7 +327,7 @@ function StartRequestInterval() {
 	var params = "?BusID="+numberBus.value;
 	oReq.open("get", "manageData/CoordinatesToJS.php"+params, true);
     oReq.send();
-}
+}*/
 
 function ClearObjects() {
 
@@ -527,6 +535,7 @@ function UpdateInfoWindow() {
 
 }
 
+/*
 function UpdateBusObjectPosition (TemporaryObject) {
 
 	BusObject.lat = TemporaryObject.lat;
@@ -537,12 +546,11 @@ function UpdateBusObjectPosition (TemporaryObject) {
 	UpdateInfoWindow();
 
 }
+*/
 
-function ChangesMarkerPos () {
+function ChangesMarkerPos (lat, lng) {
 
-	console.log(BusObject);
-
-	var latLngMarker = new google.maps.LatLng(BusObject.lat, BusObject.lng);
+	var latLngMarker = new google.maps.LatLng(lat, lng);
 
 	BusObject.iconObject.setPosition(latLngMarker); 
 }
@@ -681,29 +689,6 @@ function CreateListLine () {
 		
 	}
 }
-/**
- * 
- * MATH
- * 
- */ 
-function distanceInMBetweenEarthCoordinates(lat1, lon1, lat2, lon2) {
-	var earthRadiusKm = 6371;
-  
-	var dLat = degreesToRadians(lat2-lat1);
-	var dLon = degreesToRadians(lon2-lon1);
-  
-	lat1 = degreesToRadians(lat1);
-	lat2 = degreesToRadians(lat2);
-  
-	var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-			Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
-	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-	return earthRadiusKm * c * 1000;
-}
-
-function degreesToRadians(degrees) {
-	return degrees * Math.PI / 180;
-}
 
 function setRoute() {
 
@@ -735,7 +720,13 @@ function setRoute() {
                 // display the route
 				ViewObject.directionsRenderer.setDirections(response);
 
-				//ViewObject.overviewPath = response.routes[0].overview_path;
+				/* Start Animation */
+
+				ViewObject.overviewPath = response.routes[0].overview_path;
+
+				console.log(ViewObject.overviewPath);
+
+				transition();
                 
             } else {
                 window.alert('Directions request failed due to ' + status);
@@ -750,3 +741,65 @@ function RemoveRoute() {
 
 	delete ViewObject.directionsRenderer;
 }
+
+var numDeltas = 1000;
+var k;
+var delay = 10; //milliseconds
+
+function transition() {
+
+	k = 0;
+
+	AnimationObject.originLat = ViewObject.overviewPath[0].lat();
+	AnimationObject.originLng = ViewObject.overviewPath[0].lng();
+	
+	AnimationObject.destLat = ViewObject.overviewPath[1].lat();
+	AnimationObject.destLng = ViewObject.overviewPath[1].lng();
+
+    AnimationObject.deltaLat = (AnimationObject.destLat - AnimationObject.originLat)/numDeltas;
+	AnimationObject.deltaLng = (AnimationObject.destLng - AnimationObject.originLng)/numDeltas;
+	
+	console.log("deltaLAt: " + AnimationObject.deltaLat + "deltaLng: " + AnimationObject.deltaLng);
+
+    moveMarker();
+}
+
+function moveMarker(){
+
+    AnimationObject.originLat += AnimationObject.deltaLat;
+	AnimationObject.originLng += AnimationObject.deltaLng;
+	
+	var latlng = new google.maps.LatLng(AnimationObject.originLat, AnimationObject.originLng);
+	
+	BusObject.iconObject.setPosition(latlng);
+	
+    if(k != numDeltas){
+        k++;
+        setTimeout(moveMarker, delay);
+    }
+}
+
+/**
+ * 
+ * MATH
+ * 
+ */ 
+function distanceInMBetweenEarthCoordinates(lat1, lon1, lat2, lon2) {
+	var earthRadiusKm = 6371;
+  
+	var dLat = degreesToRadians(lat2-lat1);
+	var dLon = degreesToRadians(lon2-lon1);
+  
+	lat1 = degreesToRadians(lat1);
+	lat2 = degreesToRadians(lat2);
+  
+	var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+			Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+	return earthRadiusKm * c * 1000;
+}
+
+function degreesToRadians(degrees) {
+	return degrees * Math.PI / 180;
+}
+

@@ -28,8 +28,10 @@ ClientObject = {},
  * 					directionsRenderer,
  * 					markerObject,
  * 					stopIndex,
+ * 					Leg,,
  * 					overviewPath,
- * 					handleInterval
+ * 					handleInterval,
+ * 					timeStop
  * 				}
  */
 ViewObject = {},
@@ -51,7 +53,9 @@ ListObject = {},
  * 						destLat,
  * 						destLng,
  * 						deltaLat,
- * 						deltaLng
+ * 						deltaLng,
+ * 						delay,
+ * 						numDelta
  * 				}
  */
 AnimationObject = {};
@@ -523,6 +527,11 @@ function UpdateInfoWindow() {
 
 	var time = (distance/velocity);
 
+	/**
+	 * Keep it to use to compare with google data
+	 */
+	ViewObject.timeStop = time;
+
 	if (time < 60) {
 		document.getElementById("BusTimeDetails").innerHTML = time.toFixed(1) + " sec";
 	} else {
@@ -716,17 +725,30 @@ function setRoute() {
 			avoidTolls: true
         },
         function(response, status) {
+
             if (status == google.maps.DirectionsStatus.OK) {
                 // display the route
 				ViewObject.directionsRenderer.setDirections(response);
 
 				/* Start Animation */
 
+				/**
+				 * Coordinates Array of the directions path
+				 */
 				ViewObject.overviewPath = response.routes[0].overview_path;
 
-				console.log(ViewObject.overviewPath);
+				/**
+				 * Leg of the path
+				 */
+				var leg =  response.routes[0].legs[0];
 
-				transition();
+				/**
+				 * MAp Bounds
+				 */
+				var mapLimits = response.routes[0].bounds;
+
+				processTransition();
+
                 
             } else {
                 window.alert('Directions request failed due to ' + status);
@@ -742,42 +764,92 @@ function RemoveRoute() {
 	delete ViewObject.directionsRenderer;
 }
 
-var numDeltas = 1000;
 var k;
-var delay = 10; //milliseconds
 
-function transition() {
+async function processTransition() {
 
-	k = 0;
+	console.log(ViewObject.overviewPath);
 
-	AnimationObject.originLat = ViewObject.overviewPath[0].lat();
-	AnimationObject.originLng = ViewObject.overviewPath[0].lng();
+	// number of times, time is gonna be split
+	AnimationObject.numDeltas = 1000;	
+
+	// in ms
+	const timeConstant = 1000/AnimationObject.numDeltas;
+
+	for (let index = 0; index < ViewObject.overviewPath.length-1; index++) {
+
+		k = 0;
+
+		var distanceFromGoogleBlock = distanceInMBetweenEarthCoordinates(	ViewObject.overviewPath[index].lat(), 
+															ViewObject.overviewPath[index].lng(),
+															ViewObject.overviewPath[index+1].lat(),
+															ViewObject.overviewPath[index+1].lng()
+		);
+
+		/**
+		 *  //								//
+		 * 	Start -|-|-|-|-|-|-|-|-|-|-|-|- End
+		 * 	//								//
+		 * 
+		 * 	Time is splitted into smalls parts based on numDeltas
+		 * 	Each small time part is the delay the animation is gonna take
+		 */
+
+		// Time in s (in ms would be multiplied by 1000 and then divied by NumDeltas, 1000/1000 =  1)
+		AnimationObject.delay = (distanceFromGoogleBlock/11)*timeConstant;
+
+		await TransitionValues(index);
+
+	}
 	
-	AnimationObject.destLat = ViewObject.overviewPath[1].lat();
-	AnimationObject.destLng = ViewObject.overviewPath[1].lng();
+}
 
-    AnimationObject.deltaLat = (AnimationObject.destLat - AnimationObject.originLat)/numDeltas;
-	AnimationObject.deltaLng = (AnimationObject.destLng - AnimationObject.originLng)/numDeltas;
+async function TransitionValues(n) {
+
+	AnimationObject.originLat = ViewObject.overviewPath[n].lat();
+	AnimationObject.originLng = ViewObject.overviewPath[n].lng();
+	
+	AnimationObject.destLat = ViewObject.overviewPath[n+1].lat();
+	AnimationObject.destLng = ViewObject.overviewPath[n+1].lng();
+
+    AnimationObject.deltaLat = (AnimationObject.destLat - AnimationObject.originLat)/AnimationObject.numDeltas;
+	AnimationObject.deltaLng = (AnimationObject.destLng - AnimationObject.originLng)/AnimationObject.numDeltas;
 	
 	console.log("deltaLAt: " + AnimationObject.deltaLat + "deltaLng: " + AnimationObject.deltaLng);
 
-    moveMarker();
+	while (k != AnimationObject.numDeltas) {
+		
+		await moveMarker();
+
+		k++;
+		
+	} 
+	
 }
 
-function moveMarker(){
 
-    AnimationObject.originLat += AnimationObject.deltaLat;
+async function moveMarker(){
+
+	AnimationObject.originLat += AnimationObject.deltaLat;
 	AnimationObject.originLng += AnimationObject.deltaLng;
 	
 	var latlng = new google.maps.LatLng(AnimationObject.originLat, AnimationObject.originLng);
 	
 	BusObject.iconObject.setPosition(latlng);
-	
-    if(k != numDeltas){
-        k++;
-        setTimeout(moveMarker, delay);
-    }
+
+	/* Waits for AnimationObject.delay to finish */
+	await AnimationDelay();
+
+	console.log("promessa de tempo passou");
+
 }
+
+function AnimationDelay() {
+	return new Promise(resolve => setTimeout(resolve, AnimationObject.delay));
+}
+  
+
+
 
 /**
  * 
@@ -801,5 +873,9 @@ function distanceInMBetweenEarthCoordinates(lat1, lon1, lat2, lon2) {
 
 function degreesToRadians(degrees) {
 	return degrees * Math.PI / 180;
+}
+
+function whichOneIsBigger(a, b) {
+	return (a >= b) ? a : b; 
 }
 

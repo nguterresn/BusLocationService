@@ -310,29 +310,6 @@ function RequestSetupCoordinates() {
     oReq.send();
 }
 
-/*
-function StartRequestInterval() {
-	var oReq = new XMLHttpRequest();
-    oReq.onload = function() {
-
-		
-		var TempObject = JSON.parse(this.responseText);
-
-		UpdateBusObjectPosition(TempObject);
-		
-		
-		//UpdatePath();
-		
-		
-    };
-    oReq.addEventListener("error", function () {
-        console.log("An error occurred while transferring the file.");
-	});
-	var params = "?BusID="+numberBus.value;
-	oReq.open("get", "manageData/CoordinatesToJS.php"+params, true);
-    oReq.send();
-}*/
-
 function ClearObjects() {
 
 	if(Object.keys(BusObject).length != 0) {
@@ -699,6 +676,9 @@ function CreateListLine () {
 	}
 }
 
+/**
+ * Directions API handler
+ */
 function setRoute() {
 
 	var bus = new google.maps.LatLng(BusObject.lat, BusObject.lng);
@@ -764,21 +744,25 @@ function RemoveRoute() {
 	delete ViewObject.directionsRenderer;
 }
 
-var k;
 
+/**
+ * Asynchronous Behaviour
+ */
+
+/**
+ * Async function Animation
+ */
 async function processTransition() {
 
 	console.log(ViewObject.overviewPath);
 
 	// number of times, time is gonna be split
-	AnimationObject.numDeltas = 1000;	
+	AnimationObject.numDeltas = 100;	
 
 	// in ms
 	const timeConstant = 1000/AnimationObject.numDeltas;
 
 	for (let index = 0; index < ViewObject.overviewPath.length-1; index++) {
-
-		k = 0;
 
 		var distanceFromGoogleBlock = distanceInMBetweenEarthCoordinates(	ViewObject.overviewPath[index].lat(), 
 															ViewObject.overviewPath[index].lng(),
@@ -798,10 +782,15 @@ async function processTransition() {
 		// Time in s (in ms would be multiplied by 1000 and then divied by NumDeltas, 1000/1000 =  1)
 		AnimationObject.delay = (distanceFromGoogleBlock/11)*timeConstant;
 
-		await TransitionValues(index);
-
+		console.log("Animation delay: " + AnimationObject.delay);
+		
+		try {
+			await TransitionValues(index);
+		} catch (e) {
+			console.error(e);
+		}
+		
 	}
-	
 }
 
 async function TransitionValues(n) {
@@ -815,14 +804,16 @@ async function TransitionValues(n) {
     AnimationObject.deltaLat = (AnimationObject.destLat - AnimationObject.originLat)/AnimationObject.numDeltas;
 	AnimationObject.deltaLng = (AnimationObject.destLng - AnimationObject.originLng)/AnimationObject.numDeltas;
 	
-	console.log("deltaLAt: " + AnimationObject.deltaLat + "deltaLng: " + AnimationObject.deltaLng);
+	console.log("deltaLAt: " + AnimationObject.deltaLat.toFixed(2) + "deltaLng: " + AnimationObject.deltaLng.toFixed(2));
 
-	while (k != AnimationObject.numDeltas) {
+	for (let async_counter = 0; async_counter < AnimationObject.numDeltas; async_counter++) {
 		
-		await moveMarker();
+		try {
+			await moveMarker();
+		} catch (e) {
+			console.error(e);
+		}
 
-		k++;
-		
 	} 
 	
 }
@@ -838,7 +829,12 @@ async function moveMarker(){
 	BusObject.iconObject.setPosition(latlng);
 
 	/* Waits for AnimationObject.delay to finish */
-	await AnimationDelay();
+
+	try {
+		await AnimationDelay();
+	} catch (e) {
+		console.error(e);
+	}
 
 	console.log("promessa de tempo passou");
 
@@ -847,8 +843,6 @@ async function moveMarker(){
 function AnimationDelay() {
 	return new Promise(resolve => setTimeout(resolve, AnimationObject.delay));
 }
-  
-
 
 
 /**

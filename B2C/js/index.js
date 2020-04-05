@@ -246,6 +246,15 @@ function RequestStops() {
 
 			console.log("toggleTab: " +toggleTab);
 			
+		});
+
+		document.getElementById("busoptions").addEventListener("click", function () {
+
+			toggleTab = !toggleTab;
+			toggleTab ? OpenBusTab() : CloseBusTab();
+
+			console.log("toggleTab: " +toggleTab);
+			
 		})
 		
 		/**
@@ -581,6 +590,9 @@ function OpenBusTab() {
 	list.style.padding = "5%";
 	list.style.overflow = "auto";
 
+	let zoomButton = document.getElementById("focusmap");
+	zoomButton.top = "-15%";
+
 	/* list */
 	ListObject.parentList = document.getElementById("listGroup");
 	ListObject.parentList.style.width = "100%";
@@ -611,6 +623,10 @@ function CloseBusTab () {
 
 	document.getElementById("mapRow").style.height = "90%";
 	document.getElementById("searchRow").style.height = "10%";
+
+	/* back to normal */
+	let zoomButton = document.getElementById("focusmap");
+	zoomButton.top = "-10%";
 
 }
 

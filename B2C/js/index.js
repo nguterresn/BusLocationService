@@ -152,7 +152,8 @@ var mapStyle = [
 	}
   ];
 
-var toggleTab = 0;
+var toggleStops = 0;
+var toggleBus = 0;
 
 /**
 * (1) Creates the Map
@@ -241,19 +242,50 @@ function RequestStops() {
 
 		document.getElementById("sort").addEventListener("click", function () {
 
-			toggleTab = !toggleTab;
-			toggleTab ? OpenBusTab() : CloseBusTab();
+			toggleStops = !toggleStops;
 
-			console.log("toggleTab: " +toggleTab);
+			if (toggleStops) {
+
+				if (!(toggleBus)) {
+					OpenTab();
+				} else {
+					toggleBus = 0;
+					/**
+					 * Clear everything from before
+					 */
+					ClearTab();
+				}
+
+				CreateListLine();
+
+			} else CloseTab();
+
+			console.log("toggleStops: " + toggleStops);
 			
 		});
 
 		document.getElementById("busoptions").addEventListener("click", function () {
 
-			toggleTab = !toggleTab;
-			toggleTab ? OpenBusTab() : CloseBusTab();
+			toggleBus = !toggleBus;
+			
+			if (toggleBus) {
 
-			console.log("toggleTab: " +toggleTab);
+				if (!(toggleStops)) {
+					OpenTab();
+					console.log("abriu open tab (bus)");
+				} else {
+					/**
+					 * Clear everything from before
+					 */
+					toggleStops = 0;
+
+					ClearTab();
+				}
+				
+
+			} else CloseTab();
+
+			console.log("toggleBus: " + toggleBus);
 			
 		})
 		
@@ -579,7 +611,7 @@ function ChangeBusStop(i) {
 /**
  * CSS styles
  */
-function OpenBusTab() {
+function OpenTab() {
 
 	document.getElementById("mapRow").style.height = "50%";
 	document.getElementById("searchRow").style.height = "50%";
@@ -597,11 +629,9 @@ function OpenBusTab() {
 	ListObject.parentList = document.getElementById("listGroup");
 	ListObject.parentList.style.width = "100%";
 
-	CreateListLine();
-
 }
 
-function UpdateBusTab() {
+function UpdateTab() {
 
 	while (ListObject.parentList.firstChild) {
 		ListObject.parentList.removeChild(ListObject.parentList.firstChild);
@@ -610,7 +640,7 @@ function UpdateBusTab() {
 	CreateListLine();
 }
 
-function CloseBusTab () {
+function CloseTab () {
 
 	var container = document.getElementById("listBus");
 
@@ -628,6 +658,12 @@ function CloseBusTab () {
 	let zoomButton = document.getElementById("focusmap");
 	zoomButton.top = "-10%";
 
+}
+
+function ClearTab() {
+	while (ListObject.parentList.firstChild) {
+		ListObject.parentList.removeChild(ListObject.parentList.firstChild);
+	}
 }
 
 function CreateListLine () {
@@ -667,7 +703,7 @@ function CreateListLine () {
 				 * Update List of stops
 				 */
 
-				UpdateBusTab();
+				UpdateTab();
 
 				/**
 				 * Delete previous routes, if any
@@ -690,6 +726,10 @@ function CreateListLine () {
 		}
 		
 	}
+}
+
+function CreateBusList() {
+
 }
 
 /**
@@ -833,7 +873,6 @@ async function TransitionValues(n) {
 	} 
 	
 }
-
 
 async function moveMarker(){
 

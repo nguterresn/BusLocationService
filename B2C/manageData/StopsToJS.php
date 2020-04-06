@@ -14,7 +14,6 @@
         /* if fails to find BUS = ID */
         if (!$result_query) {
 
-
         } else {
 
             $row = mysqli_fetch_array($result_query);

@@ -281,7 +281,7 @@ function RequestStops() {
 
 					ClearTab();
 				}
-				
+				CreateBusList();
 
 			} else CloseTab();
 
@@ -729,6 +729,40 @@ function CreateListLine () {
 }
 
 function CreateBusList() {
+
+	console.log("start bus list");
+
+	for (let index = 0; index < BusObject.stopObject[ViewObject.stopIndex].sch.length; index++) {
+		
+		/**
+		 * in stopIndex position, there should be a "sch" 
+		 * array with the mutiple times according to the stop and the bus
+		 * "sch:" ["13:00" , "14:00"] ...
+		 * I want to show these values!
+		 * (at first making it readable only)
+		 */
+
+		ListObject.liElement = document.createElement("li");
+		ListObject.liElement.classList.add("list-group-item");
+		ListObject.liElement.style.width = "100%";
+
+		ListObject.imgStop = document.createElement("div");
+		ListObject.imgStop.classList.add("col-7");
+		ListObject.imgStop.style.float = "left";
+		ListObject.imgStop.innerHTML = "<img src='/B2C/img/bus.svg' alt='busli' style='width: 30px;'/> " + numberBus.value;
+
+		ListObject.arrow.innerHTML = "<img src='/B2C/img/clock.svg' alt='stopli' style='width: 30px;'/> " + BusObject.stopObject[ViewObject.stopIndex].sch[index];
+		ListObject.arrow = document.createElement("div");
+		ListObject.arrow.classList.add("col-5");
+		ListObject.arrow.style.float = "left";
+
+		console.log(BusObject.stopObject[ViewObject.stopIndex].sch[index]);
+
+		ListObject.liElement.appendChild(ListObject.imgStop);
+		ListObject.liElement.appendChild(ListObject.arrow);
+		ListObject.parentList.appendChild(ListObject.liElement);
+
+	}
 
 }
 

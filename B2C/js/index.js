@@ -680,7 +680,7 @@ function CreateListLine () {
 			ListObject.imgStop = document.createElement("div");
 			ListObject.imgStop.classList.add("col-7");
 			ListObject.imgStop.style.float = "left";
-			ListObject.imgStop.innerHTML = "<img src='/B2C/img/map-pin-alt.svg' alt='stopli' style='width: 30px;'/> " + index;
+			ListObject.imgStop.innerHTML = "<img src='/B2C/img/map-pin-alt.svg' alt='stopli' style='width: 30px;'/> " + BusObject.stopObject[index].name;
 
 			ListObject.arrow = document.createElement("div");
 			ListObject.arrow.classList.add("col-5");

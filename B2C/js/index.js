@@ -3,7 +3,9 @@
  * 					iconObject,
  * 					stopObject: [{	
  * 									lat:,
- * 									lng:
+ * 									lng:,
+ * 									name:,
+ * 									sch: []
  * 								}],
  * 					lat:
  * 					lng:,
@@ -217,6 +219,7 @@ function RequestStops() {
 
 		/**
 		 * Received lat & lng stop coordinates as a string JSON
+		 * 
 		 */
 		BusObject.stopObject = JSON.parse(this.responseText);
 
@@ -331,16 +334,13 @@ function RequestSetupCoordinates() {
 		setRoute();
 
 		/**
-		 * Interval stuff is going to start
-		 * -> 1sec coordinates
-		 * -> 1sec measure distance between (most close) stop (ViewObject.stopIndex) and Bus
+		 * Create event to fit map to bounds
 		 */
-/*
-		handleInterval = setInterval(() => {
+		document.getElementById("focusmap").addEventListener("click", function () {
 
-			StartRequestInterval();
-
-        }, 3000);*/
+			FitMap();
+			
+		})
 		
     };
     oReq.addEventListener("error", function () {
@@ -608,6 +608,25 @@ function ChangeBusStop(i) {
 	
 }
 
+function FitMap() {
+
+	/**
+	 * Fit map between: bus, stop and client position
+	 */
+	var max_bounds = new google.maps.LatLngBounds();
+	
+	var bus = new google.maps.LatLng(BusObject.lat, BusObject.lng);
+	var stop = new google.maps.LatLng(BusObject.stopObject[ViewObject.stopIndex].lat, BusObject.stopObject[ViewObject.stopIndex].lng);
+	var client = new google.maps.LatLng(ClientObject.lat, ClientObject.lng);
+
+	max_bounds.extend(bus);
+	max_bounds.extend(stop);
+	max_bounds.extend(client);
+
+	ViewObject.map.fitBounds(max_bounds);
+
+}
+
 /**
  * CSS styles
  */
@@ -730,8 +749,6 @@ function CreateListLine () {
 
 function CreateBusList() {
 
-	console.log("start bus list");
-
 	for (let index = 0; index < BusObject.stopObject[ViewObject.stopIndex].sch.length; index++) {
 		
 		/**
@@ -751,10 +768,10 @@ function CreateBusList() {
 		ListObject.imgStop.style.float = "left";
 		ListObject.imgStop.innerHTML = "<img src='/B2C/img/bus.svg' alt='busli' style='width: 30px;'/> " + numberBus.value;
 
-		ListObject.arrow.innerHTML = "<img src='/B2C/img/clock.svg' alt='stopli' style='width: 30px;'/> " + BusObject.stopObject[ViewObject.stopIndex].sch[index];
 		ListObject.arrow = document.createElement("div");
 		ListObject.arrow.classList.add("col-5");
 		ListObject.arrow.style.float = "left";
+		ListObject.arrow.innerHTML = "<img src='/B2C/img/clock.svg' alt='stopli' style='width: 30px;'/> " + BusObject.stopObject[ViewObject.stopIndex].sch[index];
 
 		console.log(BusObject.stopObject[ViewObject.stopIndex].sch[index]);
 

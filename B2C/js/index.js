@@ -62,6 +62,14 @@ ListObject = {},
  */
 AnimationObject = {};
 
+/**
+ * ModalObject: {
+ * 					searchName:
+ * 					searchNumber:
+ * 					
+ * 				}
+ */
+
 var mapStyle = [
 	{
 	  "featureType": "administrative.land_parcel",
@@ -156,6 +164,11 @@ var mapStyle = [
 
 var toggleStops = 0;
 var toggleBus = 0;
+
+
+window.onload = function() {
+	$('#MyModal').modal('show');
+}
 
 /**
 * (1) Creates the Map
@@ -336,10 +349,12 @@ function RequestSetupCoordinates() {
 		/**
 		 * Create event to fit map to bounds
 		 */
-		document.getElementById("focusmap").addEventListener("click", function () {
-
+		var boundsIcon = document.getElementById("focusmap");
+		boundsIcon.addEventListener("click", function () {
 			FitMap();
-			
+		});
+		boundsIcon.addEventListener("error", function () {
+			alert("For some reason, an error happened!")
 		})
 		
     };
@@ -642,7 +657,7 @@ function OpenTab() {
 	list.style.overflow = "auto";
 
 	let zoomButton = document.getElementById("focusmap");
-	zoomButton.top = "-15%";
+	zoomButton.style.top = "-15%";
 
 	/* list */
 	ListObject.parentList = document.getElementById("listGroup");
@@ -675,7 +690,7 @@ function CloseTab () {
 
 	/* back to normal */
 	let zoomButton = document.getElementById("focusmap");
-	zoomButton.top = "-10%";
+	zoomButton.style.top = "-10%";
 
 }
 

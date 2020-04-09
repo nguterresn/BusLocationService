@@ -176,33 +176,42 @@ var toggleBus = 0;
  */
 window.onload = function() {
 	$('#MyModal').modal('show');
-	
-	HandleModal();
 }
+
+var numberBus = document.getElementById("inputSearchBus");
 
 function HandleModal() {
 
 	/**
-	 * By name
+	 * By name & number
 	 */
-	document.getElementById("testbtn").addEventListener("click", function () {
+	document.getElementById("destbusbtn").addEventListener("click", function () {
+
+		/**
+		 * If is not a number then it may be text - a destination
+		 */
+		if (isNaN(parseInt(numberBus.value))) {
+
+			ClearObjects();
+			// destination functions
+
+		} else {
+
+			/**
+		 	* Before Starting, make sure BusObject & ViewObject  is cleared
+		 	* This is a double check, for double number IDs (i.e 22)
+		 	*/
+			ClearObjects();
+
+			/* First it is necessary to fetch stops coordinates */
+			RequestStops();
+
+		}
+
 		$('#MyModal').modal('hide');
-
-
-	})
-
-	/**
-	 * By number
-	 */
-	document.getElementById("testbtn").addEventListener("click", function () {
-		$('#MyModal').modal('hide');
-
-
 
 	})
 	
-
-
 	/**
 	 * Validation (future work)
 	 */
@@ -212,6 +221,11 @@ function HandleModal() {
 * (1) Creates the Map
 */
 InitMap();
+
+/**
+ * Create events to hide modal and start tasks
+ */
+HandleModal();
 
 /**
 * -> Asks for geolocation
@@ -224,50 +238,6 @@ getLocation();
  * Search EVENT
  * 
  */
-
-/**
- * Creates and Event to trigger requests related to input value
- * -> First 
- */
-
-var numberBus = document.getElementById("inputSearchBus");
-numberBus.addEventListener("input", function () {
-	
-	console.log("Number input: " + numberBus.value);
-
-	/**
-	 * In order to reduce errors, it is necessary to filter ONLY numbers.
-	 * So, if the input IS NOT a number, the map should be cleared and
-	 * BusObject + ViewObject cleared aswell.
-	 * 
-	 * If the input IS a numbe, it should start the cycle.
-	 * But... If a interval is running it should be immediatly stopped.
-	 * */
-
-	//if (!(handleInterval === undefined)) 
-			//clearInterval(handleInterval);
-
-	if (isNaN(parseInt(numberBus.value))) {
-
-		console.log("Not a number in the input field");
-		ClearObjects();
-		console.log(BusObject);
-		console.log(ViewObject);
-
-	} else {
-
-		/**
-		 * Before Starting, make sure BusObject & ViewObject  is cleared
-		 * This is a double check, for double number IDs (i.e 22)
-		 */
-		ClearObjects();
-
-		/* First it is necessary to fetch stops coordinates */
-		RequestStops();
-
-	}
-
-});
 
 function RequestStops() {
 	var oReq = new XMLHttpRequest();
@@ -907,7 +877,6 @@ function RemoveRoute() {
 
 	delete ViewObject.directionsRenderer;
 }
-
 
 /**
  * Asynchronous Behaviour

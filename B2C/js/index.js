@@ -176,8 +176,36 @@ var toggleBus = 0;
  */
 window.onload = function() {
 	$('#MyModal').modal('show');
-
 	
+	HandleModal();
+}
+
+function HandleModal() {
+
+	/**
+	 * By name
+	 */
+	document.getElementById("testbtn").addEventListener("click", function () {
+		$('#MyModal').modal('hide');
+
+
+	})
+
+	/**
+	 * By number
+	 */
+	document.getElementById("testbtn").addEventListener("click", function () {
+		$('#MyModal').modal('hide');
+
+
+
+	})
+	
+
+
+	/**
+	 * Validation (future work)
+	 */
 }
 
 /**
@@ -193,11 +221,16 @@ InitMap();
 getLocation();
 
 /**
+ * Search EVENT
+ * 
+ */
+
+/**
  * Creates and Event to trigger requests related to input value
  * -> First 
  */
 
-var numberBus = document.getElementById("busSelected");
+var numberBus = document.getElementById("inputSearchBus");
 numberBus.addEventListener("input", function () {
 	
 	console.log("Number input: " + numberBus.value);
@@ -658,11 +691,10 @@ function FitMap() {
 function OpenTab() {
 
 	document.getElementById("mapRow").style.height = "50%";
-	document.getElementById("searchRow").style.height = "50%";
 
 	/* container */
 	let list = document.getElementById("listBus");
-	list.style.height = "70%";
+	list.style.height = "40%";
 	list.style.padding = "5%";
 	list.style.overflow = "auto";
 
@@ -696,7 +728,7 @@ function CloseTab () {
 	container.style.padding = "0%";
 
 	document.getElementById("mapRow").style.height = "90%";
-	document.getElementById("searchRow").style.height = "10%";
+	document.getElementById("listBus").style.height = "0%";
 
 	/* back to normal */
 	let zoomButton = document.getElementById("focusmap");

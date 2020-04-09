@@ -34,7 +34,7 @@
                             <input type="text" class="shadow-sm form-control text-center" id="inputSearchStop" placeholder="Insert Stop...">
                         </div>
                         <div class="col-6">
-                            <button class="btn btn-primary">Search!</button>
+                            <button class="btn btn-primary" id="testbtn">Search!</button>
                         </div>
                     </div>
                     <br>
@@ -44,7 +44,7 @@
                             <input type="tel" class="shadow-sm form-control text-center" id="inputSearchBus" placeholder="Insert Bus...">
                         </div>
                         <div class="col-6">
-                            <button class="btn btn-primary">Search!</button>
+                            <button class="btn btn-primary" id="testbtn">Search!</button>
                         </div>
                     </div>
                     <br>
@@ -54,7 +54,7 @@
                             <input type="tel" class="shadow-sm form-control text-center" id="inputSearchPass" placeholder="Insert Card...">
                         </div>
                         <div class="col-6">
-                            <button class="btn btn-primary">Search!</button>
+                            <button class="btn btn-primary" id="testbtn">Search!</button>
                         </div>
                     </div>
                 </div>
@@ -85,9 +85,15 @@
                 </div>
             </div>
 
-            <div class="row" id="searchRow">
+            <!--List div-->
+            <div class="row border-top" id="listBus">
+                <ul class="list-group" id="listGroup">
+                  </ul>
+            </div>
+
+            <div class="row border-top" id="searchRow">
                 <div class="col" id="searchCol">
-                    <div class="row" id="searchLine">
+                    <div class="row align-items-center" id="searchLine">
 
                             <div class="col-3 text-center">
                                 <div class="row">
@@ -102,8 +108,17 @@
                                 </div>
                             </div>
                     
-                            <div class="col-6">
-                                <input type="tel" class="shadow-sm form-control text-center" id="busSelected" placeholder="Insert Bus...">
+                            <div class="col-6 text-center">
+                                <div class="row">
+                                    <div class="col">
+                                        <img src="/B2C/img/search.svg" alt="sort" id="sort">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                       <small>Search</small> 
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="col-3 text-center">
@@ -119,11 +134,6 @@
                                 </div>
                             </div>
                         
-                    </div>
-
-                    <div class="row" id="listBus">
-                        <ul class="list-group" id="listGroup">
-                          </ul>
                     </div>
                 </div>
             </div>

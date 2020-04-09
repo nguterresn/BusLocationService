@@ -211,6 +211,13 @@ function HandleModal() {
 		$('#MyModal').modal('hide');
 
 	})
+
+	/**
+	 * Open modal again
+	 */
+	document.getElementById("openmodal").addEventListener("click", function () {
+		$('#MyModal').modal('show');
+	})
 	
 	/**
 	 * Validation (future work)
@@ -668,8 +675,8 @@ function OpenTab() {
 	list.style.padding = "5%";
 	list.style.overflow = "auto";
 
-	let zoomButton = document.getElementById("focusmap");
-	zoomButton.style.top = "-15%";
+	let buttonsOverMap = document.getElementById("containericons");
+	buttonsOverMap.style.visibility = "hidden";
 
 	/* list */
 	ListObject.parentList = document.getElementById("listGroup");
@@ -701,8 +708,8 @@ function CloseTab () {
 	document.getElementById("listBus").style.height = "0%";
 
 	/* back to normal */
-	let zoomButton = document.getElementById("focusmap");
-	zoomButton.style.top = "-10%";
+	let buttonsOverMap = document.getElementById("containericons");
+	buttonsOverMap.style.visibility = "visible";
 
 }
 

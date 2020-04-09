@@ -56,9 +56,18 @@
         box-shadow: 0 6px 10px 0 rgba(0, 0, 0, .14), 0 1px 18px 0 rgba(0, 0, 0, .12), 0 3px 5px -1px rgba(0, 0, 0, .2)
     }
 
-    #sort, #busoptions, #compress {
+    #sort, #busoptions, #compress, #openmodal {
         width: 30px;
         height: 30px;
+    }
+
+    #containericons {
+        position: relative;
+        right: -85%;
+        top: -20%;
+        width: 40px;
+        height: 100px;
+ 
     }
 
     #focusmap {
@@ -66,13 +75,21 @@
         width: 40px;
         height: 40px;
         position: relative;
-        top: -10%;
-        right: -90%;
+        left: 25%;
         border-radius: 50%;
     }
 
-    #compress {
-        margin: auto;
+    #openmodalcontainer {
+        background-color: white;
+        width: 40px;
+        height: 40px;
+        position: relative;
+        left: 25%;
+        border-radius: 50%;
+    }
+
+    #compress, #openmodal {
+        margin: 5px;
     }
 
     small {

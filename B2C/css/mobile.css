@@ -38,8 +38,13 @@
         height: 10%;
     }
 
+    #searchCol {
+        height: 100%;
+        width: 100%;
+    }
+
     #searchLine {
-        margin: 5%;
+        margin: 2%;
         height: fit-content;
     }
 
@@ -68,6 +73,10 @@
 
     #compress {
         margin: auto;
+    }
+
+    small {
+        color: #6597FF;
     }
 
 

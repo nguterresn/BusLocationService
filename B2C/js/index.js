@@ -162,12 +162,22 @@ var mapStyle = [
 	}
   ];
 
+/**
+* Used to handle bottom menu
+*/
 var toggleStops = 0;
 var toggleBus = 0;
 
-
+/**
+ * Modal should split the appplication into 3 different types: 
+ * search for name, 
+ * for bus number 
+ * or just to check pass validaty 
+ */
 window.onload = function() {
 	$('#MyModal').modal('show');
+
+	
 }
 
 /**

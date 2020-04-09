@@ -25,10 +25,38 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLongTitle">Choose wisely...</h5>
+                  <h5 class="modal-title" id="ModalTitle">Choose wisely...</h5>
                 </div>
                 <div class="modal-body">
-                  ...
+                    <label for="inputSearchStop">Destination stop name:</label>
+                    <div class="row">
+                        <div class="col-6">
+                            <input type="text" class="shadow-sm form-control text-center" id="inputSearchStop" placeholder="Insert Stop...">
+                        </div>
+                        <div class="col-6">
+                            <button class="btn btn-primary">Search!</button>
+                        </div>
+                    </div>
+                    <br>
+                    <label for="inputSearchBus">Bus number:</label>
+                    <div class="row">
+                        <div class="col-6">
+                            <input type="tel" class="shadow-sm form-control text-center" id="inputSearchBus" placeholder="Insert Bus...">
+                        </div>
+                        <div class="col-6">
+                            <button class="btn btn-primary">Search!</button>
+                        </div>
+                    </div>
+                    <br>
+                    <label for="inputSearchStop">Card Number:</label>
+                    <div class="row">
+                        <div class="col-6">
+                            <input type="tel" class="shadow-sm form-control text-center" id="inputSearchPass" placeholder="Insert Card...">
+                        </div>
+                        <div class="col-6">
+                            <button class="btn btn-primary">Search!</button>
+                        </div>
+                    </div>
                 </div>
               </div>
             </div>
@@ -59,18 +87,36 @@
 
             <div class="row" id="searchRow">
                 <div class="col" id="searchCol">
-                    <div class="row align-items-center" id="searchLine">
+                    <div class="row" id="searchLine">
 
-                            <div class="col-3">
-                                <img src="/B2C/img/map-marker-plus.svg" alt="sort" id="sort">
+                            <div class="col-3 text-center">
+                                <div class="row">
+                                    <div class="col">
+                                        <img src="/B2C/img/map-marker-plus.svg" alt="sort" id="sort">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                       <small>Stops</small> 
+                                    </div>
+                                </div>
                             </div>
                     
                             <div class="col-6">
                                 <input type="tel" class="shadow-sm form-control text-center" id="busSelected" placeholder="Insert Bus...">
                             </div>
 
-                            <div class="col-3 text-right">
-                                <img src="/B2C/img/sign-alt.svg" alt="" id="busoptions">
+                            <div class="col-3 text-center">
+                                <div class="row">
+                                    <div class="col">
+                                        <img src="/B2C/img/sign-alt.svg" alt="" id="busoptions">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <small>Buses</small> 
+                                    </div>
+                                </div>
                             </div>
                         
                     </div>
